@@ -1,0 +1,834 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CU Career Student Prototype</title>
+  <style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+:root {
+  --cu-bg: #fbfcfe;
+  --cu-surface: #ffffff;
+  --cu-text: #1b1f2a;
+  --cu-muted: #7d8597;
+  --cu-line: #e8ecf3;
+  --cu-blue: #4c68ff;
+  --cu-blue-soft: #f1f4ff;
+  --cu-green: #1fb26b;
+  --cu-green-soft: #ebfaf1;
+  --cu-amber: #f5b940;
+  --cu-amber-soft: #fff6df;
+  --cu-shadow: 0 6px 20px rgba(15, 23, 42, 0.04);
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  min-height: 100%;
+  background: var(--cu-bg);
+  color: var(--cu-text);
+  font-family: "Inter", "Segoe UI", sans-serif;
+}
+
+a { color: inherit; text-decoration: none; }
+button, input, textarea { font: inherit; }
+button { cursor: pointer; }
+.cu-shell { min-height: 100vh; }
+.cu-topbar {
+  display: flex; align-items: center; justify-content: space-between; gap: 24px;
+  height: 92px; padding: 0 20px 0 14px; background: rgba(255,255,255,.96); border-bottom: 1px solid var(--cu-line);
+}
+.cu-brand { display:flex; align-items:center; gap:16px; min-width:260px; }
+.cu-brand-mark { position:relative; width:40px; height:40px; flex:0 0 40px; }
+.cu-brand-mark span { position:absolute; display:block; border:2px solid var(--cu-text); transform:rotate(45deg); }
+.cu-brand-mark span:nth-child(1) { left:0; top:13px; width:18px; height:18px; }
+.cu-brand-mark span:nth-child(2) { right:0; top:0; width:18px; height:18px; }
+.cu-brand-mark span:nth-child(3) { left:11px; bottom:0; width:18px; height:18px; }
+.cu-brand-text { font-size:15px; font-weight:800; line-height:.92; text-transform:uppercase; letter-spacing:.01em; }
+.cu-topnav { display:flex; align-items:center; gap:6px; flex:1 1 auto; }
+.cu-topnav-link { border:0; background:transparent; border-radius:14px; padding:12px 16px; color:#434b5d; font-size:17px; font-weight:500; }
+.cu-topnav-link.active { background:#f2f5fb; color:var(--cu-blue); }
+.cu-topbar-actions { display:flex; align-items:center; gap:12px; }
+.cu-late-days {
+  display:inline-flex; align-items:center; gap:10px; padding:12px 16px; border-radius:14px;
+  background:#f5f7fb; color:#2b3240; font-size:15px; font-weight:500;
+}
+.cu-avatar {
+  display:inline-flex; align-items:center; justify-content:center; width:52px; height:52px; border-radius:999px;
+  background:#f3f5f9; color:#2b3240; font-size:17px; font-weight:500;
+}
+.cu-layout { display:flex; min-height:calc(100vh - 92px); }
+.cu-sidebar { width:250px; padding:18px 16px; border-right:1px solid var(--cu-line); background:rgba(255,255,255,.88); }
+.cu-sidebar-nav { display:flex; flex-direction:column; gap:6px; }
+.cu-sidebar-link {
+  display:flex; align-items:center; gap:14px; width:100%; border:0; background:transparent;
+  padding:13px 14px; border-radius:18px; color:#5c6475; text-align:left;
+}
+.cu-sidebar-link.active { background:var(--cu-blue-soft); color:var(--cu-blue); }
+.cu-sidebar-icon { display:inline-flex; align-items:center; justify-content:center; width:34px; height:34px; color:currentColor; }
+.cu-sidebar-label { font-size:16px; font-weight:500; }
+.cu-main { flex:1 1 auto; min-width:0; padding:34px 48px 40px; }
+.cu-breadcrumbs { display:flex; align-items:center; gap:12px; color:#858c9c; font-size:15px; font-weight:500; }
+.cu-breadcrumbs span:last-child { color:var(--cu-blue); }
+.cu-page-title { margin:20px 0 0; font-size:54px; line-height:1.05; font-weight:800; letter-spacing:-.03em; }
+.cu-page-subtitle { margin:16px 0 0; max-width:840px; color:#6f7788; font-size:18px; line-height:1.7; }
+.cu-panel { background:var(--cu-surface); border:1px solid var(--cu-line); border-radius:28px; box-shadow:var(--cu-shadow); }
+.cu-section { margin-top:28px; }
+.cu-panel-pad { padding:28px; }
+.cu-progress { display:flex; align-items:center; gap:12px; margin-top:30px; overflow-x:auto; padding-bottom:4px; }
+.cu-progress-line { flex:1 0 72px; min-width:72px; height:1px; border-top:1px dashed #d9dfeb; }
+.cu-step { display:flex; align-items:center; gap:14px; min-width:190px; }
+.cu-step-dot {
+  display:flex; align-items:center; justify-content:center; width:52px; height:52px; border-radius:999px;
+  background:#eef1f7; color:#5f6778; font-size:18px; font-weight:700;
+}
+.cu-step-dot.active { background:var(--cu-blue); color:white; }
+.cu-step-dot.done { background:var(--cu-green-soft); color:var(--cu-green); }
+.cu-step-title { font-size:16px; font-weight:700; }
+.cu-step-meta { margin-top:4px; color:#7d8597; font-size:14px; }
+.cu-grid-2 { display:grid; grid-template-columns:repeat(2, minmax(0, 1fr)); gap:20px; }
+.cu-grid-3 { display:grid; grid-template-columns:repeat(3, minmax(0, 1fr)); gap:16px; }
+.cu-kpi-card, .cu-soft-card { border-radius:22px; background:#f7f9fc; border:1px solid #edf1f7; }
+.cu-kpi-card { padding:18px; }
+.cu-soft-card { padding:20px; }
+.cu-label { color:#81899a; font-size:14px; font-weight:500; }
+.cu-strong { margin-top:8px; font-size:20px; font-weight:700; line-height:1.35; letter-spacing:-.02em; }
+.cu-badge { display:inline-flex; align-items:center; gap:6px; padding:7px 12px; border-radius:999px; font-size:13px; font-weight:600; }
+.cu-badge.blue { background:var(--cu-blue-soft); color:var(--cu-blue); }
+.cu-badge.green { background:var(--cu-green-soft); color:var(--cu-green); }
+.cu-badge.amber { background:var(--cu-amber-soft); color:#a36b00; }
+.cu-badge.gray { background:#f4f6fa; color:#667084; }
+.cu-button, .cu-button-secondary, .cu-button-quiet {
+  display:inline-flex; align-items:center; justify-content:center; gap:8px; min-height:46px; padding:0 18px;
+  border-radius:16px; border:1px solid transparent; font-size:15px; font-weight:600;
+}
+.cu-button { background:var(--cu-blue); color:white; }
+.cu-button-secondary { background:white; border-color:#dbe2ef; color:#2a3040; }
+.cu-button-quiet { background:#f5f7fb; color:#485062; }
+.cu-button[disabled] { opacity:.45; cursor:not-allowed; }
+.cu-card-title { margin:0; font-size:24px; line-height:1.2; font-weight:800; letter-spacing:-.02em; }
+.cu-card-subtitle { margin:10px 0 0; color:#6f7788; font-size:15px; line-height:1.7; }
+.cu-split-actions { display:grid; grid-template-columns:repeat(2, minmax(0, 1fr)); gap:18px; }
+.cu-choice-card { min-height:260px; padding:28px; border:1px solid var(--cu-line); border-radius:24px; background:#fff; }
+.cu-note { padding:18px 20px; border-radius:20px; background:#f7f8fc; color:#697183; font-size:15px; line-height:1.7; }
+.cu-note strong { color:#404859; }
+.cu-fields { display:grid; gap:18px; margin-top:22px; }
+.cu-field { display:grid; gap:8px; }
+.cu-field-label { font-size:14px; font-weight:600; color:#353d4d; }
+.cu-input, .cu-textarea {
+  width:100%; border:1px solid #dfe5f0; border-radius:18px; background:white; color:var(--cu-text);
+  padding:15px 16px; font-size:15px; outline:none;
+}
+.cu-textarea { resize:vertical; min-height:140px; }
+.cu-input:focus, .cu-textarea:focus { border-color:#aab9ff; }
+.cu-segmented { display:grid; grid-template-columns:repeat(2, minmax(0, 1fr)); gap:12px; }
+.cu-segment { border:1px solid #dfe5f0; border-radius:20px; background:white; padding:18px; text-align:left; }
+.cu-segment.active { border-color:#cfd8ff; background:var(--cu-blue-soft); color:var(--cu-blue); }
+.cu-segment-title { font-size:16px; font-weight:700; }
+.cu-segment-copy { margin-top:6px; color:#70788a; font-size:14px; line-height:1.55; }
+.cu-action-row { display:flex; flex-wrap:wrap; gap:10px; margin-top:24px; }
+.cu-table-wrap { overflow:auto; border-radius:28px; border:1px solid var(--cu-line); background:white; box-shadow:var(--cu-shadow); }
+.cu-table { width:100%; border-collapse:collapse; min-width:980px; }
+.cu-table th { padding:16px 20px; background:#f7f9fc; color:#7f8798; font-size:13px; font-weight:600; text-align:left; }
+.cu-table td { padding:18px 20px; border-top:1px solid var(--cu-line); font-size:14px; color:#394150; vertical-align:top; }
+.cu-table strong { color:var(--cu-text); }
+.cu-list { display:grid; gap:14px; margin-top:20px; }
+.cu-list-row {
+  display:flex; align-items:flex-start; justify-content:space-between; gap:20px;
+  border:1px solid #edf1f7; border-radius:22px; background:#f9fbfd; padding:18px 20px;
+}
+.cu-list-title { font-size:18px; font-weight:700; letter-spacing:-.02em; }
+.cu-list-copy { margin-top:6px; color:#727b8c; font-size:14px; line-height:1.65; }
+.cu-mini-actions { display:flex; flex-wrap:wrap; gap:8px; margin-top:14px; }
+.cu-slot-grid { display:grid; grid-template-columns:repeat(2, minmax(0, 1fr)); gap:16px; }
+.cu-slot { border:1px solid #dfe5f0; border-radius:20px; background:white; padding:18px; text-align:left; }
+.cu-slot.active { border-color:#cfd8ff; background:var(--cu-blue-soft); }
+.cu-toast {
+  position:fixed; right:24px; bottom:24px; z-index:50; display:none; padding:14px 18px; border-radius:16px;
+  background:#1f2432; color:white; font-size:14px; font-weight:500; box-shadow:0 14px 24px rgba(15,23,42,.14);
+}
+.cu-toast.show { display:block; }
+.cu-mobile-note { display:none; }
+
+@media (max-width: 1200px) {
+  .cu-grid-2, .cu-grid-3, .cu-split-actions, .cu-slot-grid { grid-template-columns:1fr; }
+  .cu-main { padding:24px; }
+}
+
+@media (max-width: 960px) {
+  .cu-topnav, .cu-sidebar { display:none; }
+  .cu-mobile-note {
+    display:block; padding:16px 20px; border-bottom:1px solid var(--cu-line);
+    color:#6f7788; background:white; font-size:14px;
+  }
+  .cu-main { padding:20px; }
+  .cu-page-title { font-size:40px; }
+}
+  </style>
+</head>
+<body>
+  <div class="cu-shell">
+    <header class="cu-topbar">
+      <div class="cu-brand">
+        <a href="./index.html" class="cu-brand" style="min-width:auto">
+          <div class="cu-brand-mark" aria-hidden="true">
+            <span></span><span></span><span></span>
+          </div>
+          <div class="cu-brand-text">Центральный<br>университет</div>
+        </a>
+      </div>
+
+      <nav class="cu-topnav" aria-label="Главная навигация">
+        <button class="cu-topnav-link">Мероприятия</button>
+        <button class="cu-topnav-link active">Обучение</button>
+        <button class="cu-topnav-link">Time</button>
+        <button class="cu-topnav-link">Поддержка</button>
+        <button class="cu-topnav-link">Хендбук студента</button>
+      </nav>
+
+      <div class="cu-topbar-actions">
+        <div class="cu-late-days">
+          <span id="topCalendarIcon"></span>
+          <span>Late days: 0</span>
+        </div>
+        <button class="cu-button-quiet" style="min-width:46px;padding:0 14px" aria-label="Уведомления">
+          <span id="topBellIcon"></span>
+        </button>
+        <div class="cu-avatar">АК</div>
+      </div>
+    </header>
+
+    <div class="cu-mobile-note">Прототип собран под desktop и повторяет визуальную логику LMS CU.</div>
+
+    <div class="cu-layout">
+      <aside class="cu-sidebar">
+        <nav id="studentNav" class="cu-sidebar-nav"></nav>
+      </aside>
+
+      <main class="cu-main">
+        <div id="studentContent"></div>
+      </main>
+    </div>
+  </div>
+
+  <div id="studentToast" class="cu-toast"></div>
+
+  <script>
+    const studentState = {
+      view: "journey",
+      application: {
+        fullName: "Анна Кузнецова",
+        course: "3 курс",
+        program: "Машинное обучение",
+        track: "Стажировка",
+        grade: "Intern / Junior",
+        spheres: "Аналитика, ML Product, Data Science",
+        expectations: "Хочу выйти на стажировку в продуктовую команду с сильным наставничеством и понятным карьерным треком.",
+        submitted: true
+      },
+      resume: {
+        status: "В работе",
+        fileName: "",
+        consultSlot: "",
+        note: "Загрузите резюме или выберите слот консультации."
+      },
+      calendar: {
+        selectedSlot: ""
+      },
+      assessment: {
+        status: "Ожидает",
+        slot: "",
+        grade: "Не определен",
+        feedback: "После прохождения менеджер добавит сюда обратную связь от ассесора."
+      },
+      vacancies: [
+        {
+          id: 1,
+          company: "Т-Банк",
+          role: "Product Analyst Intern",
+          why: "Сильное совпадение по аналитике, SQL и продуктовому треку.",
+          status: "Подобрана",
+          priority: null
+        },
+        {
+          id: 2,
+          company: "Яндекс",
+          role: "ML Product Intern",
+          why: "Совпадает с интересом к ML Product и карьерным ожиданиям.",
+          status: "Подобрана",
+          priority: null
+        },
+        {
+          id: 3,
+          company: "Авито",
+          role: "Data Analyst Intern",
+          why: "Подходит по уровню и даёт быстрый вход в аналитику.",
+          status: "Подобрана",
+          priority: null
+        }
+      ]
+    };
+
+    const studentMenu = [
+      { id: "journey", label: "Путь студента", icon: "target" },
+      { id: "vacancies", label: "Вакансии", icon: "bag" },
+      { id: "responses", label: "Отклики", icon: "send", muted: true },
+      { id: "calendar", label: "Календарь", icon: "calendar" },
+      { id: "materials", label: "Материалы", icon: "file", muted: true },
+      { id: "profile", label: "Профиль", icon: "user", muted: true },
+      { id: "settings", label: "Настройки", icon: "settings", muted: true }
+    ];
+
+    const studentRouteViews = new Set(["journey", "application", "resume", "calendar", "assessment", "vacancies"]);
+
+    function icon(name, size = 20) {
+      const common = `width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"`;
+      const icons = {
+        calendar: `<svg ${common}><rect x="3" y="4" width="18" height="17" rx="3"></rect><path d="M16 2v4"></path><path d="M8 2v4"></path><path d="M3 10h18"></path></svg>`,
+        bell: `<svg ${common}><path d="M6.26 17h11.48"></path><path d="M8 17V10a4 4 0 1 1 8 0v7"></path><path d="M10 21a2 2 0 0 0 4 0"></path></svg>`,
+        target: `<svg ${common}><circle cx="12" cy="12" r="7"></circle><circle cx="12" cy="12" r="3"></circle></svg>`,
+        bag: `<svg ${common}><path d="M6 8h12"></path><path d="M8 8a4 4 0 0 1 8 0"></path><path d="M5 8h14l-1 11H6L5 8Z"></path></svg>`,
+        send: `<svg ${common}><path d="m22 2-7 20-4-9-9-4Z"></path><path d="M22 2 11 13"></path></svg>`,
+        file: `<svg ${common}><path d="M14 2H7a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7z"></path><path d="M14 2v5h5"></path></svg>`,
+        user: `<svg ${common}><circle cx="12" cy="8" r="4"></circle><path d="M5 20a7 7 0 0 1 14 0"></path></svg>`,
+        settings: `<svg ${common}><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.6 1.6 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.6 1.6 0 0 0-1.82-.33 1.6 1.6 0 0 0-1 1.46V21a2 2 0 1 1-4 0v-.09a1.6 1.6 0 0 0-1-1.46 1.6 1.6 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.6 1.6 0 0 0 .33-1.82 1.6 1.6 0 0 0-1.46-1H3a2 2 0 1 1 0-4h.09a1.6 1.6 0 0 0 1.46-1 1.6 1.6 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.6 1.6 0 0 0 1.82.33h.02a1.6 1.6 0 0 0 1-1.46V3a2 2 0 1 1 4 0v.09a1.6 1.6 0 0 0 1 1.46h.02a1.6 1.6 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.6 1.6 0 0 0-.33 1.82v.02a1.6 1.6 0 0 0 1.46 1H21a2 2 0 1 1 0 4h-.09a1.6 1.6 0 0 0-1.46 1Z"></path></svg>`,
+        check: `<svg ${common}><path d="m5 13 4 4L19 7"></path></svg>`
+      };
+      return icons[name] || "";
+    }
+
+    document.getElementById("topCalendarIcon").innerHTML = icon("calendar", 18);
+    document.getElementById("topBellIcon").innerHTML = icon("bell", 18);
+
+    function badge(text, tone = "gray") {
+      return `<span class="cu-badge ${tone}">${text}</span>`;
+    }
+
+    function step(index, title, meta, options = {}) {
+      const dotClass = options.done ? "done" : options.active ? "active" : "";
+      const dotContent = options.done ? icon("check", 18) : index;
+      return `
+        <div class="cu-step">
+          <div class="cu-step-dot ${dotClass}">${dotContent}</div>
+          <div>
+            <div class="cu-step-title">${title}</div>
+            <div class="cu-step-meta">${meta}</div>
+          </div>
+        </div>
+      `;
+    }
+
+    function studentNavView() {
+      const activeMap = {
+        journey: "journey",
+        application: "journey",
+        resume: "journey",
+        calendar: "calendar",
+        assessment: "journey",
+        vacancies: "vacancies"
+      };
+      const activeBase = activeMap[studentState.view] || "journey";
+
+      return studentMenu.map(item => `
+        <button class="cu-sidebar-link ${activeBase === item.id ? "active" : ""}" ${item.muted ? "" : `data-route="${item.id}"`}>
+          <span class="cu-sidebar-icon">${icon(item.icon, 21)}</span>
+          <span class="cu-sidebar-label">${item.label}</span>
+        </button>
+      `).join("");
+    }
+
+    function studentHeader(title, crumb, subtitle = "") {
+      return `
+        <div class="cu-breadcrumbs">
+          <span>Обучение</span>
+          <span>›</span>
+          <span>${crumb}</span>
+        </div>
+        <h1 class="cu-page-title">${title}</h1>
+        ${subtitle ? `<p class="cu-page-subtitle">${subtitle}</p>` : ""}
+      `;
+    }
+
+    function journeyView() {
+      return `
+        ${studentHeader("Путь студента", "Путь студента")}
+
+        <section class="cu-section cu-panel cu-panel-pad">
+          <div class="cu-progress">
+            ${step(1, "Заявка", "Пройдено", { done: true })}
+            <div class="cu-progress-line"></div>
+            ${step(2, "Резюме", studentState.resume.status, { active: true })}
+            <div class="cu-progress-line"></div>
+            ${step(3, "Assessment", studentState.assessment.status)}
+            <div class="cu-progress-line"></div>
+            ${step(4, "Вакансии", "Ожидает")}
+          </div>
+        </section>
+
+        <section class="cu-section cu-panel cu-panel-pad">
+          <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:24px;flex-wrap:wrap">
+            <div>
+              <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+                <h2 class="cu-card-title">Резюме</h2>
+                ${badge(studentState.resume.status, "blue")}
+              </div>
+              <p class="cu-card-subtitle">Загрузите резюме или создайте его вместе с карьерным консультантом. После этого этапа откроется запись на assessment.</p>
+            </div>
+            <button class="cu-button" data-route="resume">Продолжить</button>
+          </div>
+
+          <div class="cu-split-actions" style="margin-top:28px">
+            <div class="cu-choice-card">
+              <div class="cu-label">Текущий статус</div>
+              <div class="cu-strong">${studentState.resume.fileName || "Резюме пока не загружено"}</div>
+              <p class="cu-card-subtitle">${studentState.resume.consultSlot ? `Консультация назначена: ${studentState.resume.consultSlot}` : "Можно сразу загрузить файл или сначала выбрать слот консультации."}</p>
+              <div class="cu-action-row">
+                <button class="cu-button-secondary" data-route="resume">Открыть этап</button>
+              </div>
+            </div>
+
+            <div class="cu-choice-card">
+              <div class="cu-label">Карьерные ожидания</div>
+              <div class="cu-strong">${studentState.application.grade}</div>
+              <p class="cu-card-subtitle">${studentState.application.spheres}</p>
+              <div class="cu-action-row">
+                <button class="cu-button-secondary" data-route="application">Смотреть заявку</button>
+              </div>
+            </div>
+          </div>
+        </section>
+      `;
+    }
+
+    function applicationView() {
+      return `
+        ${studentHeader("Карьерная заявка", "Путь студента", "Первый шаг, чтобы зафиксировать контекст студента, его цели и карьерные ожидания.")}
+
+        <section class="cu-section cu-panel cu-panel-pad">
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap">
+            <div>${badge(studentState.application.submitted ? "Заявка отправлена" : "Черновик", studentState.application.submitted ? "green" : "gray")}</div>
+          </div>
+
+          <form id="applicationForm" class="cu-grid-2" style="margin-top:20px">
+            <div class="cu-soft-card">
+              <h2 class="cu-card-title">Личная информация</h2>
+              <div class="cu-fields">
+                <label class="cu-field">
+                  <span class="cu-field-label">ФИО</span>
+                  <input class="cu-input" name="fullName" value="${studentState.application.fullName}">
+                </label>
+                <div class="cu-grid-2" style="gap:14px">
+                  <label class="cu-field">
+                    <span class="cu-field-label">Курс</span>
+                    <input class="cu-input" name="course" value="${studentState.application.course}">
+                  </label>
+                  <label class="cu-field">
+                    <span class="cu-field-label">Программа</span>
+                    <input class="cu-input" name="program" value="${studentState.application.program}">
+                  </label>
+                </div>
+                <div class="cu-field">
+                  <span class="cu-field-label">Что ищу сейчас</span>
+                  <div class="cu-segmented">
+                    <button type="button" class="cu-segment ${studentState.application.track === "Стажировка" ? "active" : ""}" data-track="Стажировка">
+                      <div class="cu-segment-title">Стажировка</div>
+                      <div class="cu-segment-copy">Подходит для первого карьерного шага с сопровождением.</div>
+                    </button>
+                    <button type="button" class="cu-segment ${studentState.application.track === "Работа" ? "active" : ""}" data-track="Работа">
+                      <div class="cu-segment-title">Работа</div>
+                      <div class="cu-segment-copy">Фокус на полноценную роль после assessment.</div>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="cu-soft-card">
+              <h2 class="cu-card-title">Карьерные ожидания</h2>
+              <div class="cu-fields">
+                <label class="cu-field">
+                  <span class="cu-field-label">Желаемый грейд</span>
+                  <input class="cu-input" name="grade" value="${studentState.application.grade}">
+                </label>
+                <label class="cu-field">
+                  <span class="cu-field-label">Интересующие сферы</span>
+                  <input class="cu-input" name="spheres" value="${studentState.application.spheres}">
+                </label>
+                <label class="cu-field">
+                  <span class="cu-field-label">Комментарий</span>
+                  <textarea class="cu-textarea" name="expectations">${studentState.application.expectations}</textarea>
+                </label>
+              </div>
+              <div class="cu-action-row">
+                <button type="button" class="cu-button-secondary" data-action="save-application">Сохранить черновик</button>
+                <button type="button" class="cu-button" data-action="submit-application">Отправить заявку</button>
+              </div>
+            </div>
+          </form>
+        </section>
+      `;
+    }
+
+    function resumeView() {
+      return `
+        ${studentHeader("Резюме", "Путь студента", "Можно загрузить готовое резюме или выбрать слот консультации, если резюме нужно создать или доработать.")}
+
+        <section class="cu-section cu-panel cu-panel-pad">
+          <div class="cu-progress">
+            ${step(1, "Заявка", "Пройдено", { done: true })}
+            <div class="cu-progress-line"></div>
+            ${step(2, "Резюме", studentState.resume.status, { active: true })}
+            <div class="cu-progress-line"></div>
+            ${step(3, "Assessment", "Ожидает")}
+            <div class="cu-progress-line"></div>
+            ${step(4, "Вакансии", "Ожидает")}
+          </div>
+        </section>
+
+        <section class="cu-section cu-panel cu-panel-pad">
+          <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+            <h2 class="cu-card-title">Резюме</h2>
+            ${badge(studentState.resume.status, "blue")}
+          </div>
+          <p class="cu-card-subtitle">После этого шага запрос попадет менеджеру, а студент увидит следующий этап в карьерном пути.</p>
+
+          <div class="cu-split-actions" style="margin-top:24px">
+            <div class="cu-choice-card">
+              <div class="cu-label">Загрузить резюме</div>
+              <div class="cu-strong">${studentState.resume.fileName || "Файл пока не загружен"}</div>
+              <p class="cu-card-subtitle">PDF, DOCX или TXT. После загрузки резюме будет отправлено на проверку.</p>
+              <div class="cu-action-row">
+                <button class="cu-button-secondary" data-action="upload-resume">Загрузить</button>
+              </div>
+            </div>
+
+            <div class="cu-choice-card">
+              <div class="cu-label">Создать с консультантом</div>
+              <div class="cu-strong">${studentState.resume.consultSlot || "Слот пока не выбран"}</div>
+              <p class="cu-card-subtitle">Если резюме нет, можно выбрать удобное время консультации и отправить запрос менеджеру.</p>
+              <div class="cu-action-row">
+                <button class="cu-button" data-route="calendar">Выбрать время</button>
+                <button class="cu-button-secondary" data-action="send-request">Отправить запрос</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="cu-note" style="margin-top:22px">
+            <strong>Важно:</strong> даже если резюме еще не готово, запрос на помощь нужно отправить, чтобы менеджер увидел кейс и взял его в работу.
+          </div>
+        </section>
+      `;
+    }
+
+    function calendarView() {
+      const slots = [
+        "Пн, 28 апреля · 17:00",
+        "Вт, 29 апреля · 11:30",
+        "Ср, 30 апреля · 16:00",
+        "Чт, 1 мая · 13:00",
+        "Пт, 2 мая · 18:30"
+      ];
+
+      return `
+        ${studentHeader("Календарь", "Календарь", "Экран спроектирован под будущую интеграцию с Яндекс Календарем и LMS: студент видит свободные слоты и подтверждает запись.")}
+
+        <section class="cu-section cu-grid-2">
+          <div class="cu-panel cu-panel-pad">
+            <h2 class="cu-card-title">Выбор слота</h2>
+            <div class="cu-slot-grid" style="margin-top:22px">
+              ${slots.map(slot => `
+                <button class="cu-slot ${studentState.calendar.selectedSlot === slot ? "active" : ""}" data-slot="${slot}">
+                  <div class="cu-label">Карьерная консультация</div>
+                  <div class="cu-strong">${slot}</div>
+                  <div class="cu-card-subtitle" style="margin-top:6px">45 минут, online</div>
+                </button>
+              `).join("")}
+            </div>
+          </div>
+
+          <div class="cu-panel cu-panel-pad">
+            <h2 class="cu-card-title">Подтверждение</h2>
+            <div class="cu-soft-card" style="margin-top:22px">
+              <div class="cu-label">Выбранный слот</div>
+              <div class="cu-strong">${studentState.calendar.selectedSlot || "Слот пока не выбран"}</div>
+            </div>
+            <p class="cu-card-subtitle">Кнопка подтверждения активируется только после выбора времени.</p>
+            <div class="cu-action-row">
+              <button class="cu-button" data-action="confirm-slot" ${studentState.calendar.selectedSlot ? "" : "disabled"}>Подтвердить слот</button>
+              <button class="cu-button-secondary" data-route="resume">Назад</button>
+            </div>
+          </div>
+        </section>
+      `;
+    }
+
+    function assessmentView() {
+      const slots = ["6 мая · 16:00", "7 мая · 12:00", "8 мая · 18:00"];
+
+      return `
+        ${studentHeader("Assessment", "Путь студента", "Обязательный этап для всех студентов: запись на интервью, фиксация результата, грейда и обратной связи от ассесора.")}
+
+        <section class="cu-section cu-grid-2">
+          <div class="cu-panel cu-panel-pad">
+            <h2 class="cu-card-title">Запись на assessment</h2>
+            <div class="cu-list">
+              ${slots.map(slot => `
+                <button class="cu-list-row ${studentState.assessment.slot === slot ? "active" : ""}" style="${studentState.assessment.slot === slot ? "border-color:#cfd8ff;background:#f1f4ff" : ""}" data-assessment-slot="${slot}">
+                  <div>
+                    <div class="cu-list-title">${slot}</div>
+                    <div class="cu-list-copy">Собеседование по хардам и определению грейда.</div>
+                  </div>
+                </button>
+              `).join("")}
+            </div>
+            <div class="cu-action-row">
+              <button class="cu-button" data-action="confirm-assessment">Подтвердить время</button>
+              <button class="cu-button-secondary" data-action="complete-assessment">Показать результат</button>
+            </div>
+          </div>
+
+          <div class="cu-panel cu-panel-pad">
+            <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+              <h2 class="cu-card-title">Результат assessment</h2>
+              ${badge(studentState.assessment.status, "amber")}
+            </div>
+            <div class="cu-grid-2" style="margin-top:22px;gap:14px">
+              <div class="cu-soft-card">
+                <div class="cu-label">Выбранный слот</div>
+                <div class="cu-strong">${studentState.assessment.slot || "Не выбран"}</div>
+              </div>
+              <div class="cu-soft-card">
+                <div class="cu-label">Установленный грейд</div>
+                <div class="cu-strong">${studentState.assessment.grade}</div>
+              </div>
+            </div>
+            <div class="cu-soft-card" style="margin-top:14px">
+              <div class="cu-label">Обратная связь от ассесора</div>
+              <div class="cu-card-subtitle" style="margin-top:8px">${studentState.assessment.feedback}</div>
+            </div>
+            <div class="cu-action-row">
+              <button class="cu-button-secondary" data-route="vacancies">Перейти к вакансиям</button>
+            </div>
+          </div>
+        </section>
+      `;
+    }
+
+    function vacanciesView() {
+      return `
+        ${studentHeader("Вакансии", "Вакансии", "После assessment студент видит релевантные вакансии и может расставить приоритеты. Менеджер использует этот приоритет при отправке резюме партнерам.")}
+
+        <section class="cu-section">
+          <div class="cu-list">
+            ${studentState.vacancies.map(vacancy => `
+              <div class="cu-panel cu-panel-pad">
+                <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:20px;flex-wrap:wrap">
+                  <div style="max-width:760px">
+                    <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+                      <div class="cu-label" style="text-transform:uppercase;letter-spacing:.1em">${vacancy.company}</div>
+                      ${badge(vacancy.status, "gray")}
+                    </div>
+                    <div class="cu-strong" style="margin-top:10px">${vacancy.role}</div>
+                    <div class="cu-card-subtitle">${vacancy.why}</div>
+                  </div>
+                  <div class="cu-soft-card" style="min-width:280px">
+                    <div class="cu-label">Ваш приоритет</div>
+                    <div class="cu-strong">${vacancy.priority ? `#${vacancy.priority}` : "Не выбран"}</div>
+                    <div class="cu-mini-actions">
+                      <button class="cu-button-quiet" data-priority="${vacancy.id}:1">1</button>
+                      <button class="cu-button-quiet" data-priority="${vacancy.id}:2">2</button>
+                      <button class="cu-button-quiet" data-priority="${vacancy.id}:3">3</button>
+                    </div>
+                    <div class="cu-mini-actions">
+                      <button class="cu-button-secondary" data-action="skip-vacancy" data-id="${vacancy.id}">Неинтересно</button>
+                      <button class="cu-button" data-action="confirm-priority" data-id="${vacancy.id}">Подтвердить</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            `).join("")}
+          </div>
+        </section>
+      `;
+    }
+
+    function renderStudent() {
+      document.getElementById("studentNav").innerHTML = studentNavView();
+
+      const views = {
+        journey: journeyView,
+        application: applicationView,
+        resume: resumeView,
+        calendar: calendarView,
+        assessment: assessmentView,
+        vacancies: vacanciesView
+      };
+
+      document.getElementById("studentContent").innerHTML = views[studentState.view]();
+    }
+
+    function toast(message) {
+      const el = document.getElementById("studentToast");
+      el.textContent = message;
+      el.classList.add("show");
+      clearTimeout(toast.timer);
+      toast.timer = setTimeout(() => el.classList.remove("show"), 2200);
+    }
+
+    function readApplicationForm() {
+      const form = document.getElementById("applicationForm");
+      if (!form) return;
+      const data = new FormData(form);
+      studentState.application.fullName = data.get("fullName");
+      studentState.application.course = data.get("course");
+      studentState.application.program = data.get("program");
+      studentState.application.grade = data.get("grade");
+      studentState.application.spheres = data.get("spheres");
+      studentState.application.expectations = data.get("expectations");
+    }
+
+    document.addEventListener("click", (event) => {
+      const routeButton = event.target.closest("[data-route]");
+      if (routeButton) {
+        const route = routeButton.dataset.route;
+        if (studentRouteViews.has(route)) {
+          studentState.view = route;
+          renderStudent();
+        }
+        return;
+      }
+
+      const trackButton = event.target.closest("[data-track]");
+      if (trackButton) {
+        studentState.application.track = trackButton.dataset.track;
+        renderStudent();
+        return;
+      }
+
+      const slotButton = event.target.closest("[data-slot]");
+      if (slotButton) {
+        studentState.calendar.selectedSlot = slotButton.dataset.slot;
+        renderStudent();
+        return;
+      }
+
+      const assessmentSlotButton = event.target.closest("[data-assessment-slot]");
+      if (assessmentSlotButton) {
+        studentState.assessment.slot = assessmentSlotButton.dataset.assessmentSlot;
+        renderStudent();
+        return;
+      }
+
+      const priorityButton = event.target.closest("[data-priority]");
+      if (priorityButton) {
+        const [id, priority] = priorityButton.dataset.priority.split(":");
+        const vacancy = studentState.vacancies.find((item) => item.id === Number(id));
+        if (vacancy) {
+          vacancy.priority = Number(priority);
+          toast(`Для ${vacancy.company} выбран приоритет #${priority}`);
+          renderStudent();
+        }
+        return;
+      }
+
+      const actionButton = event.target.closest("[data-action]");
+      if (!actionButton) return;
+
+      const action = actionButton.dataset.action;
+
+      if (action === "save-application") {
+        readApplicationForm();
+        toast("Черновик заявки сохранен");
+        return;
+      }
+
+      if (action === "submit-application") {
+        readApplicationForm();
+        studentState.application.submitted = true;
+        studentState.view = "resume";
+        toast("Заявка отправлена");
+        renderStudent();
+        return;
+      }
+
+      if (action === "upload-resume") {
+        studentState.resume.fileName = "Resume_Anna_Kuznetsova.pdf";
+        studentState.resume.status = "На проверке";
+        studentState.resume.note = "Резюме загружено. Менеджер увидит его в рабочем кабинете.";
+        toast("Резюме загружено");
+        renderStudent();
+        return;
+      }
+
+      if (action === "send-request") {
+        if (!studentState.resume.consultSlot) {
+          toast("Сначала выберите слот консультации");
+          return;
+        }
+        studentState.resume.status = "Консультация назначена";
+        studentState.resume.note = "Запрос отправлен. Слот синхронизируется через календарную интеграцию.";
+        toast("Запрос на консультацию отправлен");
+        renderStudent();
+        return;
+      }
+
+      if (action === "confirm-slot") {
+        if (!studentState.calendar.selectedSlot) {
+          toast("Сначала выберите время");
+          return;
+        }
+        studentState.resume.consultSlot = studentState.calendar.selectedSlot;
+        studentState.resume.status = "Консультация назначена";
+        studentState.view = "resume";
+        toast("Слот подтвержден");
+        renderStudent();
+        return;
+      }
+
+      if (action === "confirm-assessment") {
+        if (!studentState.assessment.slot) {
+          toast("Сначала выберите время assessment");
+          return;
+        }
+        studentState.assessment.status = "Запланирован";
+        toast("Assessment запланирован");
+        renderStudent();
+        return;
+      }
+
+      if (action === "complete-assessment") {
+        studentState.assessment.status = "Завершен";
+        studentState.assessment.grade = "Junior";
+        studentState.assessment.feedback = "Сильная база по аналитике и структурное мышление. Рекомендуется усилить практику SQL и кейсы по приоритизации.";
+        toast("Результат обновлен");
+        renderStudent();
+        return;
+      }
+
+      if (action === "skip-vacancy") {
+        const vacancy = studentState.vacancies.find((item) => item.id === Number(actionButton.dataset.id));
+        if (vacancy) {
+          vacancy.status = "Неинтересно";
+          vacancy.priority = null;
+          toast(`Вакансия ${vacancy.company} скрыта`);
+          renderStudent();
+        }
+        return;
+      }
+
+      if (action === "confirm-priority") {
+        const vacancy = studentState.vacancies.find((item) => item.id === Number(actionButton.dataset.id));
+        if (vacancy) {
+          vacancy.status = vacancy.priority ? "Приоритет подтвержден" : vacancy.status;
+          toast(vacancy.priority ? "Приоритет сохранен" : "Сначала выберите приоритет");
+          renderStudent();
+        }
+      }
+    });
+
+    renderStudent();
+  </script>
+</body>
+</html>
