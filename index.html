@@ -6,14 +6,24 @@
   <title>CU Career Student Prototype</title>
   <style>
     :root {
-      color-scheme: light;
-      --bg: #f6f8fc;
-      --frame: #ffffff;
-      --line: #e6eaf2;
-      --text: #1a1f2c;
-      --muted: #7b8395;
-      --blue: #5a56f6;
-      --shadow: 0 24px 60px rgba(15, 23, 42, 0.08);
+      --bg: #fbfbfe;
+      --surface: #ffffff;
+      --line: #ebeef5;
+      --line-strong: #e1e6f0;
+      --text: #202534;
+      --muted: #7c8396;
+      --purple: #5e5af7;
+      --purple-soft: #f3f1ff;
+      --green: #2ac179;
+      --green-soft: #ecfbf3;
+      --chip: #f5f7fb;
+      --shadow: 0 18px 40px rgba(17, 24, 39, 0.05);
+      --radius-xl: 28px;
+      --radius-lg: 22px;
+      --radius-md: 16px;
+      --sidebar-width: 214px;
+      --topbar-height: 72px;
+      font-synthesis-weight: none;
     }
 
     * {
@@ -24,47 +34,59 @@
     body {
       margin: 0;
       min-height: 100%;
-      background:
-        radial-gradient(circle at top, rgba(90, 86, 246, 0.08), transparent 34%),
-        var(--bg);
+      background: var(--bg);
       color: var(--text);
-      font-family: "Inter", "Segoe UI", sans-serif;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     }
 
     body {
-      display: flex;
-      justify-content: center;
-      padding: 28px;
+      min-width: 1280px;
     }
 
-    .app {
-      width: min(100%, 1360px);
+    button,
+    input {
+      font: inherit;
     }
 
-    .topline {
+    button {
+      cursor: pointer;
+    }
+
+    .shell {
+      min-height: 100vh;
+      background: linear-gradient(180deg, #ffffff 0%, #fbfbfe 100%);
+    }
+
+    .topbar {
+      height: var(--topbar-height);
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 16px;
-      margin-bottom: 18px;
+      gap: 24px;
+      padding: 0 22px 0 24px;
+      border-bottom: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.94);
+      backdrop-filter: blur(12px);
     }
 
     .brand {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 14px;
+      min-width: 170px;
     }
 
     .brand-mark {
       position: relative;
       width: 30px;
       height: 30px;
+      flex: 0 0 30px;
     }
 
     .brand-mark span {
       position: absolute;
       display: block;
-      border: 1.8px solid #11151f;
+      border: 2px solid #1d2231;
       transform: rotate(45deg);
     }
 
@@ -89,88 +111,765 @@
       height: 14px;
     }
 
-    .brand-copy {
-      font-size: 14px;
+    .brand-text {
+      font-size: 12px;
+      line-height: 0.95;
       font-weight: 800;
-      line-height: 0.92;
+      letter-spacing: 0.01em;
       text-transform: uppercase;
     }
 
-    .meta {
+    .topnav {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      flex: 1 1 auto;
+      margin-left: 12px;
+    }
+
+    .topnav-item {
+      border: 0;
+      background: transparent;
+      padding: 10px 8px;
+      border-radius: 12px;
+      color: #444c5e;
+      font-size: 15px;
+      font-weight: 500;
+    }
+
+    .topnav-item.active {
+      color: var(--purple);
+      background: var(--purple-soft);
+      padding-inline: 14px;
+    }
+
+    .topbar-right {
       display: flex;
       align-items: center;
       gap: 10px;
+    }
+
+    .bonus-chip,
+    .days-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      height: 40px;
+      padding: 0 14px;
+      border-radius: 14px;
+      background: #f7f8fc;
+      border: 1px solid #eef1f7;
+      color: #3f4657;
+      font-size: 14px;
+      font-weight: 500;
+      white-space: nowrap;
+    }
+
+    .bonus-chip {
+      color: var(--purple);
+      background: #f6f3ff;
+    }
+
+    .avatar {
+      width: 42px;
+      height: 42px;
+      border-radius: 999px;
+      background: #f4f6fa;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 15px;
+      font-weight: 500;
+      color: #3a4254;
+    }
+
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 999px;
+      background: var(--purple);
+      box-shadow: 0 0 0 4px rgba(94, 90, 247, 0.12);
+    }
+
+    .content-wrap {
+      display: flex;
+      min-height: calc(100vh - var(--topbar-height));
+    }
+
+    .sidebar {
+      width: var(--sidebar-width);
+      padding: 22px 16px 24px;
+      border-right: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.72);
+    }
+
+    .side-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .side-item {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      width: 100%;
+      border: 0;
+      background: transparent;
+      border-radius: 16px;
+      min-height: 48px;
+      padding: 0 12px;
+      color: #596175;
+      text-align: left;
+      font-size: 15px;
+      font-weight: 500;
+    }
+
+    .side-item.active {
+      background: #f5f1ff;
+      color: var(--purple);
+    }
+
+    .side-icon {
+      width: 20px;
+      height: 20px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: currentColor;
+      flex: 0 0 20px;
+    }
+
+    .main {
+      flex: 1 1 auto;
+      padding: 28px 38px 42px;
+    }
+
+    .page-title {
+      margin: 2px 0 26px;
+      font-size: 29px;
+      line-height: 1.1;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+    }
+
+    .progress {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 28px;
+    }
+
+    .progress-line {
+      flex: 1 1 100px;
+      min-width: 80px;
+      border-top: 1px dashed #dfe4ef;
+    }
+
+    .progress-line.complete {
+      border-top-style: solid;
+      border-top-color: #83ddae;
+    }
+
+    .progress-step {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      min-width: 150px;
+      cursor: pointer;
+    }
+
+    .progress-pill {
+      min-width: 184px;
+      padding: 13px 18px;
+      border-radius: 18px;
+      background: var(--purple-soft);
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      cursor: pointer;
+    }
+
+    .progress-index {
+      width: 52px;
+      height: 52px;
+      border-radius: 999px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #eceff5;
+      color: #2f3441;
+      font-size: 18px;
+      font-weight: 700;
+      flex: 0 0 52px;
+    }
+
+    .progress-pill .progress-index {
+      background: var(--purple);
+      color: white;
+      box-shadow: 0 10px 24px rgba(94, 90, 247, 0.28);
+    }
+
+    .progress-index.done {
+      background: white;
+      border: 2px solid #96e1b8;
+      color: var(--green);
+      font-size: 0;
+      position: relative;
+      box-shadow: inset 0 0 0 5px #f8fffb;
+    }
+
+    .progress-index.done::before {
+      content: "";
+      width: 14px;
+      height: 8px;
+      border-left: 2px solid currentColor;
+      border-bottom: 2px solid currentColor;
+      transform: rotate(-45deg);
+      display: block;
+      margin-top: -2px;
+    }
+
+    .progress-copy {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .progress-title {
+      font-size: 16px;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      color: #252b39;
+    }
+
+    .progress-meta {
+      font-size: 14px;
       color: var(--muted);
+    }
+
+    .progress-pill .progress-title,
+    .progress-pill .progress-meta {
+      color: #4b46d6;
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      box-shadow: var(--shadow);
+      padding: 26px;
+    }
+
+    .hero-card {
+      min-height: 534px;
+    }
+
+    .card-header {
+      display: flex;
+      align-items: flex-start;
+      gap: 18px;
+      margin-bottom: 24px;
+    }
+
+    .card-icon {
+      width: 56px;
+      height: 56px;
+      border-radius: 999px;
+      background: #f6f2ff;
+      color: var(--purple);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex: 0 0 56px;
+    }
+
+    .card-title-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .card-title {
+      margin: 0;
+      font-size: 24px;
+      line-height: 1.2;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+    }
+
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      height: 28px;
+      padding: 0 12px;
+      border-radius: 999px;
+      background: #f2efff;
+      color: #5c59df;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .muted-copy {
+      margin-top: 8px;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .section-label {
+      margin: 0 0 10px;
+      font-size: 15px;
+      font-weight: 600;
+      color: #262c3a;
+    }
+
+    .field-group {
+      margin-bottom: 24px;
+    }
+
+    .field-caption {
+      margin-bottom: 12px;
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .text-input {
+      width: 100%;
+      height: 44px;
+      border: 1px solid var(--line-strong);
+      border-radius: 12px;
+      background: white;
+      padding: 0 14px;
+      font-size: 14px;
+      color: #30374a;
+    }
+
+    .choice-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+    }
+
+    .choice-btn {
+      min-width: 168px;
+      height: 46px;
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      padding: 0 14px;
+      border-radius: 12px;
+      border: 1px solid var(--line-strong);
+      background: white;
+      color: #31384a;
       font-size: 14px;
       font-weight: 500;
     }
 
-    .chip {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      min-height: 40px;
-      padding: 0 14px;
-      border: 1px solid var(--line);
-      border-radius: 999px;
-      background: rgba(255, 255, 255, 0.8);
+    .choice-btn.small {
+      min-width: 140px;
     }
 
-    .frame {
-      position: relative;
-      width: 100%;
-      border-radius: 32px;
-      overflow: hidden;
-      background: var(--frame);
-      border: 1px solid var(--line);
-      box-shadow: var(--shadow);
-      aspect-ratio: 1280 / 853;
+    .choice-btn.active {
+      border-color: rgba(94, 90, 247, 0.28);
+      background: #f7f5ff;
+      color: #4f4ad8;
+      box-shadow: 0 0 0 3px rgba(94, 90, 247, 0.05);
     }
 
-    .frame img {
-      display: block;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      user-select: none;
-      -webkit-user-drag: none;
-    }
-
-    .hotspot {
-      position: absolute;
+    .primary-btn {
+      min-width: 206px;
+      height: 40px;
       border: 0;
-      background: transparent;
-      border-radius: 18px;
-      cursor: pointer;
+      border-radius: 10px;
+      background: linear-gradient(90deg, #625df7 0%, #524ef3 100%);
+      color: white;
+      font-size: 14px;
+      font-weight: 600;
+      box-shadow: 0 12px 22px rgba(94, 90, 247, 0.2);
     }
 
-    .hotspot:hover {
-      box-shadow: inset 0 0 0 2px rgba(90, 86, 246, 0.24);
-      background: rgba(90, 86, 246, 0.04);
+    .primary-btn.wide {
+      width: 100%;
+      height: 38px;
     }
 
-    .toolbar {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-top: 18px;
-    }
-
-    .toolbar button {
-      min-height: 42px;
-      padding: 0 14px;
-      border-radius: 14px;
-      border: 1px solid var(--line);
+    .outline-btn {
+      min-width: 148px;
+      height: 40px;
+      border-radius: 11px;
+      border: 1px solid rgba(94, 90, 247, 0.38);
       background: white;
-      color: #42495a;
+      color: #5f5bf0;
       font-size: 14px;
       font-weight: 600;
     }
 
-    .toolbar button.active {
-      border-color: rgba(90, 86, 246, 0.18);
-      background: rgba(90, 86, 246, 0.08);
-      color: var(--blue);
+    .resume-grid {
+      display: grid;
+      grid-template-columns: 1fr 56px 1fr;
+      gap: 22px;
+      align-items: stretch;
+      margin-top: 28px;
+    }
+
+    .resume-option {
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      padding: 34px 28px;
+      min-height: 202px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .resume-option-top {
+      display: flex;
+      align-items: flex-start;
+      gap: 18px;
+    }
+
+    .mini-icon {
+      width: 54px;
+      height: 54px;
+      border-radius: 14px;
+      background: #f7f3ff;
+      color: var(--purple);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex: 0 0 54px;
+    }
+
+    .option-title {
+      font-size: 18px;
+      font-weight: 600;
+      line-height: 1.35;
+      letter-spacing: -0.02em;
+    }
+
+    .option-copy {
+      margin-top: 6px;
+      font-size: 14px;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    .or-label {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--muted);
+      font-size: 15px;
+      font-weight: 500;
+    }
+
+    .info-strip {
+      margin-top: 24px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      min-height: 58px;
+      border-radius: 16px;
+      background: #f7f5ff;
+      padding: 0 18px;
+      color: #6f7590;
+      font-size: 14px;
+    }
+
+    .info-circle {
+      width: 24px;
+      height: 24px;
+      border-radius: 999px;
+      border: 1.5px solid #7a76f7;
+      color: #7a76f7;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      font-weight: 700;
+      flex: 0 0 24px;
+    }
+
+    .assessment-grid {
+      display: grid;
+      grid-template-columns: 1.08fr 0.92fr;
+      gap: 18px;
+    }
+
+    .assessment-left {
+      padding-right: 8px;
+    }
+
+    .assessment-left .section-label {
+      margin-bottom: 14px;
+      font-size: 20px;
+    }
+
+    .calendar-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 14px;
+    }
+
+    .calendar-nav {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .icon-btn {
+      width: 34px;
+      height: 34px;
+      border-radius: 10px;
+      border: 1px solid var(--line-strong);
+      background: white;
+      color: #5f6778;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .timezone {
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .day-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+
+    .day-card {
+      min-height: 72px;
+      border: 1px solid var(--line-strong);
+      border-radius: 12px;
+      background: white;
+      padding: 10px 8px;
+      text-align: center;
+      color: #4a5163;
+    }
+
+    .day-card.active {
+      border-color: rgba(94, 90, 247, 0.45);
+      background: #faf8ff;
+      color: #4f4ad8;
+      box-shadow: inset 0 0 0 2px rgba(94, 90, 247, 0.08);
+    }
+
+    .day-name {
+      font-size: 14px;
+      margin-bottom: 8px;
+    }
+
+    .day-num {
+      font-size: 24px;
+      line-height: 1;
+      font-weight: 500;
+    }
+
+    .day-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 999px;
+      background: var(--purple);
+      margin: 8px auto 0;
+    }
+
+    .time-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .time-btn {
+      height: 42px;
+      border-radius: 11px;
+      border: 1px solid var(--line-strong);
+      background: white;
+      color: #41495b;
+      font-size: 15px;
+      font-weight: 500;
+    }
+
+    .time-btn.active {
+      border-color: rgba(94, 90, 247, 0.42);
+      background: #f9f7ff;
+      color: #4f4ad8;
+    }
+
+    .duration {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 18px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .materials-panel {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .materials-heading {
+      margin: 4px 0 8px;
+      font-size: 18px;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+    }
+
+    .material-card {
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      min-height: 68px;
+      padding: 14px 16px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      background: white;
+    }
+
+    .material-copy {
+      flex: 1 1 auto;
+    }
+
+    .material-title {
+      font-size: 15px;
+      font-weight: 600;
+      line-height: 1.35;
+    }
+
+    .material-desc {
+      margin-top: 3px;
+      font-size: 14px;
+      color: var(--muted);
+    }
+
+    .chevron {
+      color: #82889b;
+      font-size: 22px;
+      line-height: 1;
+    }
+
+    .materials-link {
+      border: 1px solid #ece8ff;
+      background: #f8f5ff;
+    }
+
+    .materials-link .material-title {
+      color: #6661e8;
+      font-weight: 500;
+    }
+
+    .jobs-heading {
+      margin: 0 0 18px;
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+
+    .jobs-list {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .job-card {
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      min-height: 110px;
+      padding: 18px 20px;
+      display: grid;
+      grid-template-columns: 72px 1.35fr 1.05fr 164px;
+      gap: 18px;
+      align-items: center;
+      background: white;
+    }
+
+    .job-logo {
+      width: 60px;
+      height: 60px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 28px;
+      overflow: hidden;
+      color: white;
+    }
+
+    .job-logo.dark {
+      background: #1d1f28;
+    }
+
+    .job-logo.light {
+      background: #f4f6fa;
+      color: #5d5af0;
+    }
+
+    .job-logo.green {
+      background: linear-gradient(135deg, #18b85c, #47d887);
+    }
+
+    .job-role {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      font-size: 18px;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+    }
+
+    .new-pill {
+      display: inline-flex;
+      align-items: center;
+      height: 24px;
+      padding: 0 8px;
+      border-radius: 999px;
+      background: #f1efff;
+      color: #7c74f5;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .job-company {
+      margin-top: 6px;
+      font-size: 16px;
+      color: #30374a;
+    }
+
+    .job-meta {
+      margin-top: 10px;
+      color: #8a90a0;
+      font-size: 14px;
+    }
+
+    .job-desc {
+      color: #5d6477;
+      font-size: 15px;
+      line-height: 1.5;
+    }
+
+    .job-action {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 12px;
+    }
+
+    .posted {
+      font-size: 14px;
+      color: #8a90a0;
+      text-align: right;
     }
 
     .toast {
@@ -179,122 +878,226 @@
       bottom: 24px;
       z-index: 50;
       display: none;
+      min-width: 220px;
       padding: 14px 18px;
-      border-radius: 16px;
+      border-radius: 14px;
       background: #1f2432;
       color: white;
       font-size: 14px;
       font-weight: 500;
-      box-shadow: 0 18px 30px rgba(15, 23, 42, 0.18);
+      box-shadow: 0 16px 28px rgba(17, 24, 39, 0.18);
     }
 
     .toast.show {
       display: block;
     }
+
+    .hidden {
+      display: none !important;
+    }
+
+    svg {
+      display: block;
+    }
   </style>
 </head>
 <body>
-  <div class="app">
-    <div class="topline">
+  <div class="shell">
+    <header class="topbar">
       <div class="brand">
         <div class="brand-mark" aria-hidden="true">
           <span></span><span></span><span></span>
         </div>
-        <div class="brand-copy">Центральный<br>университет</div>
+        <div class="brand-text">Центральный<br>университет</div>
       </div>
-      <div class="meta">
-        <div class="chip">Кликабельный прототип</div>
-        <div class="chip">4 новых референса</div>
+
+      <nav class="topnav" aria-label="Навигация">
+        <button class="topnav-item">Мероприятия</button>
+        <button class="topnav-item active">Обучение</button>
+        <button class="topnav-item">Time</button>
+        <button class="topnav-item">Поддержка</button>
+        <button class="topnav-item">Хендбук студента</button>
+      </nav>
+
+      <div class="topbar-right">
+        <div class="bonus-chip">
+          <span id="giftIcon"></span>
+          <span>Бонус за друга</span>
+        </div>
+        <div class="days-chip">
+          <span id="calendarIcon"></span>
+          <span>Late days: 38</span>
+        </div>
+        <div id="bellWrap"></div>
+        <div class="avatar">AK</div>
       </div>
-    </div>
+    </header>
 
-    <div class="frame">
-      <img id="screenImage" src="./request.jpg" alt="CU Career student screen">
-      <div id="hotspots"></div>
-    </div>
+    <div class="content-wrap">
+      <aside class="sidebar">
+        <nav class="side-list" id="sideNav"></nav>
+      </aside>
 
-    <div class="toolbar" id="toolbar"></div>
+      <main class="main">
+        <h1 class="page-title">Путь студента</h1>
+
+        <div class="progress" id="progress"></div>
+
+        <section class="card hero-card" id="screenCard"></section>
+      </main>
+    </div>
   </div>
 
   <div class="toast" id="toast"></div>
 
   <script>
+    const state = {
+      screen: "request",
+      direction: "bi",
+      format: "internship",
+      assessmentDay: "23",
+      assessmentTime: "11:30"
+    };
+
     const screens = {
       request: {
+        key: "request",
         title: "Заявка",
-        src: "./request.jpg",
-        hotspots: [
-          { x: 20, y: 113, w: 170, h: 38, go: "request" },
-          { x: 20, y: 172, w: 170, h: 38, go: "vacancies" },
-          { x: 256, y: 747, w: 219, h: 38, go: "resume" },
-          { x: 249, y: 170, w: 185, h: 74, go: "request" },
-          { x: 516, y: 170, w: 275, h: 74, go: "resume" },
-          { x: 763, y: 170, w: 270, h: 74, go: "assessment" },
-          { x: 1020, y: 170, w: 220, h: 74, go: "vacancies" }
+        status: "В процессе",
+        progress: [
+          { kind: "active", label: "Заявка", meta: "В процессе", screen: "request", number: 1 },
+          { kind: "done", label: "Резюме", meta: "Пройдено", screen: "resume" },
+          { kind: "done", label: "Assessment", meta: "Пройдено", screen: "assessment" },
+          { kind: "idle", label: "Вакансии", meta: "Ожидает", screen: "vacancies", number: 4 }
         ]
       },
       resume: {
+        key: "resume",
         title: "Резюме",
-        src: "./resume.jpg",
-        hotspots: [
-          { x: 20, y: 113, w: 170, h: 38, go: "resume" },
-          { x: 20, y: 172, w: 170, h: 38, go: "vacancies" },
-          { x: 421, y: 567, w: 140, h: 46, toast: "Резюме загружено" },
-          { x: 933, y: 571, w: 162, h: 45, go: "assessment" },
-          { x: 250, y: 170, w: 251, h: 74, go: "request" },
-          { x: 522, y: 184, w: 173, h: 74, go: "resume" },
-          { x: 791, y: 184, w: 171, h: 74, go: "assessment" },
-          { x: 1049, y: 184, w: 171, h: 74, go: "vacancies" }
+        status: "В работе",
+        progress: [
+          { kind: "done", label: "Заявка", meta: "Пройдено", screen: "request" },
+          { kind: "active", label: "Резюме", meta: "В работе", screen: "resume", number: 2 },
+          { kind: "idle", label: "Assessment", meta: "Ожидает", screen: "assessment", number: 3 },
+          { kind: "idle", label: "Вакансии", meta: "Ожидает", screen: "vacancies", number: 4 }
         ]
       },
       assessment: {
+        key: "assessment",
         title: "Assessment",
-        src: "./assesment.jpg",
-        hotspots: [
-          { x: 20, y: 113, w: 170, h: 38, go: "assessment" },
-          { x: 20, y: 172, w: 170, h: 38, go: "vacancies" },
-          { x: 273, y: 675, w: 451, h: 35, go: "vacancies", toast: "Время assessment забронировано" },
-          { x: 769, y: 359, w: 410, h: 66, toast: "Открыт материал: Алгоритмы и структуры данных" },
-          { x: 769, y: 435, w: 410, h: 66, toast: "Открыт материал: SQL: базовые запросы" },
-          { x: 769, y: 511, w: 410, h: 66, toast: "Открыт материал: Python: основы" },
-          { x: 769, y: 587, w: 410, h: 66, toast: "Открыт материал: Примеры задач" },
-          { x: 769, y: 666, w: 410, h: 42, toast: "Открыт список всех материалов" },
-          { x: 249, y: 170, w: 247, h: 74, go: "request" },
-          { x: 518, y: 170, w: 245, h: 74, go: "resume" },
-          { x: 763, y: 183, w: 179, h: 74, go: "assessment" },
-          { x: 1049, y: 183, w: 173, h: 74, go: "vacancies" }
+        status: "В работе",
+        progress: [
+          { kind: "done", label: "Заявка", meta: "Пройдено", screen: "request" },
+          { kind: "done", label: "Резюме", meta: "Пройдено", screen: "resume" },
+          { kind: "active", label: "Assessment", meta: "В работе", screen: "assessment", number: 3 },
+          { kind: "idle", label: "Вакансии", meta: "Ожидает", screen: "vacancies", number: 4 }
         ]
       },
       vacancies: {
+        key: "vacancies",
         title: "Вакансии",
-        src: "./vaacncies.jpg",
-        hotspots: [
-          { x: 20, y: 113, w: 170, h: 38, go: "request" },
-          { x: 20, y: 172, w: 170, h: 38, go: "vacancies" },
-          { x: 1056, y: 355, w: 133, h: 48, toast: "Отклик отправлен на Junior Backend Developer" },
-          { x: 1056, y: 479, w: 133, h: 48, toast: "Отклик отправлен на Data Analyst Junior" },
-          { x: 1056, y: 603, w: 133, h: 48, toast: "Отклик отправлен на Frontend Developer (React)" },
-          { x: 1056, y: 727, w: 133, h: 48, toast: "Отклик отправлен на QA Engineer" },
-          { x: 249, y: 170, w: 247, h: 74, go: "request" },
-          { x: 518, y: 170, w: 245, h: 74, go: "resume" },
-          { x: 766, y: 170, w: 243, h: 74, go: "assessment" },
-          { x: 1021, y: 177, w: 193, h: 74, go: "vacancies" }
+        status: "В процессе",
+        progress: [
+          { kind: "done", label: "Заявка", meta: "Пройдено", screen: "request" },
+          { kind: "done", label: "Резюме", meta: "Пройдено", screen: "resume" },
+          { kind: "done", label: "Assessment", meta: "Пройдено", screen: "assessment" },
+          { kind: "active", label: "Вакансии", meta: "В процессе", screen: "vacancies", number: 4 }
         ]
       }
     };
 
-    const order = ["request", "resume", "assessment", "vacancies"];
-    const frameWidth = 1280;
-    const frameHeight = 853;
+    const sideItems = [
+      { id: "request", label: "Путь студента", icon: "file", screen: "request" },
+      { id: "vacancies", label: "Вакансии", icon: "calendarBag", screen: "vacancies" },
+      { id: "responses", label: "Отклики", icon: "send" },
+      { id: "calendar", label: "Календарь", icon: "calendar" },
+      { id: "materials", label: "Материалы", icon: "doc" },
+      { id: "profile", label: "Профиль", icon: "user" },
+      { id: "settings", label: "Настройки", icon: "gear" }
+    ];
 
-    const state = {
-      screen: "request"
-    };
+    const jobs = [
+      {
+        role: "Junior Backend Developer",
+        company: "TechSolutions",
+        meta: "Удаленно  •  Full-time  •  от 120 000 ₽",
+        desc: "Разработка и поддержка REST API, работа с PostgreSQL, участие в код-ревью.",
+        posted: "Опубликовано 2 дня назад",
+        icon: "code",
+        logoClass: "light",
+        isNew: true
+      },
+      {
+        role: "Data Analyst Junior",
+        company: "DataSphere",
+        meta: "Москва  •  Full-time  •  от 100 000 ₽",
+        desc: "Анализ данных, построение дашбордов, работа с SQL и Excel.",
+        posted: "Опубликовано 3 дня назад",
+        icon: "datasphere",
+        logoClass: "light",
+        isNew: false
+      },
+      {
+        role: "Frontend Developer (React)",
+        company: "BrightCode",
+        meta: "Гибрид  •  Full-time  •  от 110 000 ₽",
+        desc: "Разработка интерфейсов на React, работа с REST API, верстка и адаптивность.",
+        posted: "Опубликовано 5 дней назад",
+        icon: "bolt",
+        logoClass: "dark",
+        isNew: true
+      },
+      {
+        role: "QA Engineer",
+        company: "ProductLab",
+        meta: "Санкт-Петербург  •  Full-time  •  от 90 000 ₽",
+        desc: "Тестирование веб-приложений, написание тест-кейсов, работа с Jira.",
+        posted: "Опубликовано 1 неделю назад",
+        icon: "p",
+        logoClass: "green",
+        isNew: false
+      }
+    ];
 
-    const image = document.getElementById("screenImage");
-    const hotspotsRoot = document.getElementById("hotspots");
-    const toolbar = document.getElementById("toolbar");
+    const sideNav = document.getElementById("sideNav");
+    const progress = document.getElementById("progress");
+    const screenCard = document.getElementById("screenCard");
     const toastEl = document.getElementById("toast");
+
+    function icon(name, size = 18) {
+      const attrs = `width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"`;
+      const icons = {
+        gift: `<svg ${attrs}><rect x="3" y="8" width="18" height="13" rx="2"></rect><path d="M12 8v13"></path><path d="M3 12h18"></path><path d="M7.5 8a2.5 2.5 0 1 1 0-5c2.5 0 4.5 5 4.5 5"></path><path d="M16.5 8a2.5 2.5 0 1 0 0-5c-2.5 0-4.5 5-4.5 5"></path></svg>`,
+        calendar: `<svg ${attrs}><rect x="3" y="4" width="18" height="17" rx="3"></rect><path d="M16 2v4"></path><path d="M8 2v4"></path><path d="M3 10h18"></path></svg>`,
+        bell: `<svg ${attrs}><path d="M6 17h12"></path><path d="M8 17V10a4 4 0 0 1 8 0v7"></path><path d="M10 21a2 2 0 0 0 4 0"></path></svg>`,
+        file: `<svg ${attrs}><path d="M14 2H7a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"></path><path d="M14 2v6h6"></path><path d="M9 13h6"></path><path d="M9 17h4"></path></svg>`,
+        calendarBag: `<svg ${attrs}><path d="M7 7h10"></path><path d="M8 7a4 4 0 0 1 8 0"></path><path d="M5 7h14l-1 12H6L5 7Z"></path></svg>`,
+        send: `<svg ${attrs}><path d="m22 2-7 20-4-9-9-4Z"></path><path d="M22 2 11 13"></path></svg>`,
+        doc: `<svg ${attrs}><path d="M14 2H7a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7z"></path><path d="M14 2v5h5"></path><path d="M9 13h6"></path><path d="M9 17h6"></path></svg>`,
+        user: `<svg ${attrs}><circle cx="12" cy="8" r="4"></circle><path d="M5 20a7 7 0 0 1 14 0"></path></svg>`,
+        gear: `<svg ${attrs}><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.6 1.6 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.6 1.6 0 0 0-1.82-.33 1.6 1.6 0 0 0-1 1.46V21a2 2 0 1 1-4 0v-.09a1.6 1.6 0 0 0-1-1.46 1.6 1.6 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.6 1.6 0 0 0 .33-1.82 1.6 1.6 0 0 0-1.46-1H3a2 2 0 1 1 0-4h.09a1.6 1.6 0 0 0 1.46-1 1.6 1.6 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.6 1.6 0 0 0 1.82.33h.02a1.6 1.6 0 0 0 1-1.46V3a2 2 0 1 1 4 0v.09a1.6 1.6 0 0 0 1 1.46h.02a1.6 1.6 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.6 1.6 0 0 0-.33 1.82v.02a1.6 1.6 0 0 0 1.46 1H21a2 2 0 1 1 0 4h-.09a1.6 1.6 0 0 0-1.46 1Z"></path></svg>`,
+        upload: `<svg ${attrs}><path d="M12 16V4"></path><path d="m7 9 5-5 5 5"></path><path d="M5 20h14"></path></svg>`,
+        consult: `<svg ${attrs}><rect x="3" y="4" width="18" height="17" rx="3"></rect><path d="M16 2v4"></path><path d="M8 2v4"></path><path d="M3 10h18"></path><path d="M12 14v4"></path><path d="M10 16h4"></path></svg>`,
+        assessment: `<svg ${attrs}><path d="M5 19V5a2 2 0 0 1 2-2h8l4 4v12a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2Z"></path><path d="m9 13 2 2 4-4"></path></svg>`,
+        code: `<svg ${attrs}><path d="m8 16-4-4 4-4"></path><path d="m16 8 4 4-4 4"></path></svg>`,
+        stack: `<svg ${attrs}><path d="M12 3 5 7l7 4 7-4-7-4Z"></path><path d="m5 12 7 4 7-4"></path><path d="m5 17 7 4 7-4"></path></svg>`,
+        clock: `<svg ${attrs}><circle cx="12" cy="12" r="9"></circle><path d="M12 7v6l4 2"></path></svg>`
+      };
+      return icons[name] || "";
+    }
+
+    function bellWithDot() {
+      return `
+        <div style="position:relative;display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;color:#6f7688">
+          ${icon("bell", 20)}
+          <span style="position:absolute;right:1px;top:3px;width:8px;height:8px;border-radius:999px;background:#5e5af7"></span>
+        </div>
+      `;
+    }
+
+    document.getElementById("giftIcon").innerHTML = icon("gift", 18);
+    document.getElementById("calendarIcon").innerHTML = icon("calendar", 18);
+    document.getElementById("bellWrap").innerHTML = bellWithDot();
 
     function showToast(message) {
       toastEl.textContent = message;
@@ -303,69 +1106,378 @@
       showToast.timer = setTimeout(() => toastEl.classList.remove("show"), 2200);
     }
 
-    function renderToolbar() {
-      toolbar.innerHTML = order.map((id) => `
-        <button class="${state.screen === id ? "active" : ""}" data-screen="${id}">
-          ${screens[id].title}
-        </button>
-      `).join("");
+    function renderSideNav() {
+      sideNav.innerHTML = sideItems.map((item) => {
+        const active = (item.screen === "request" && ["request", "resume", "assessment"].includes(state.screen))
+          || (item.screen === "vacancies" && state.screen === "vacancies");
+        return `
+          <button class="side-item ${active ? "active" : ""}" ${item.screen ? `data-screen="${item.screen}"` : ""}>
+            <span class="side-icon">${icon(item.icon, 20)}</span>
+            <span>${item.label}</span>
+          </button>
+        `;
+      }).join("");
+    }
+
+    function renderProgress() {
+      const items = screens[state.screen].progress;
+      let html = "";
+
+      items.forEach((item, index) => {
+        const isActive = item.kind === "active";
+        const isDone = item.kind === "done";
+
+        html += isActive
+          ? `
+            <button class="progress-pill" data-screen="${item.screen}">
+              <span class="progress-index">${item.number}</span>
+              <span class="progress-copy">
+                <span class="progress-title">${item.label}</span>
+                <span class="progress-meta">${item.meta}</span>
+              </span>
+            </button>
+          `
+          : `
+            <button class="progress-step" data-screen="${item.screen}">
+              <span class="progress-index ${isDone ? "done" : ""}">${isDone ? "" : item.number}</span>
+              <span class="progress-copy">
+                <span class="progress-title">${item.label}</span>
+                <span class="progress-meta">${item.meta}</span>
+              </span>
+            </button>
+          `;
+
+        if (index < items.length - 1) {
+          const next = items[index + 1];
+          const complete = isDone && (next.kind === "done" || next.kind === "active");
+          html += `<div class="progress-line ${complete ? "complete" : ""}"></div>`;
+        }
+      });
+
+      progress.innerHTML = html;
+    }
+
+    function requestView() {
+      return `
+        <div class="card-header">
+          <div class="card-icon">${icon("file", 26)}</div>
+          <div>
+            <div class="card-title-row">
+              <h2 class="card-title">Заявка</h2>
+              <span class="status-badge">В процессе</span>
+            </div>
+            <div class="muted-copy">Заполните информацию для продолжения отбора</div>
+          </div>
+        </div>
+
+        <div class="field-group">
+          <p class="section-label">1. ФИО</p>
+          <input class="text-input" placeholder="Введите ваше ФИО" value="Анна Кузнецова">
+        </div>
+
+        <div class="field-group">
+          <p class="section-label">2. Направление</p>
+          <div class="field-caption">Выберите одно направление</div>
+          <div class="choice-row">
+            <button class="choice-btn ${state.direction === "ml" ? "active" : ""}" data-direction="ml">
+              <span>${icon("assessment", 18)}</span>
+              <span>ML-разработка</span>
+            </button>
+            <button class="choice-btn ${state.direction === "bi" ? "active" : ""}" data-direction="bi">
+              <span>${icon("stack", 18)}</span>
+              <span>Бизнес-аналитика</span>
+            </button>
+            <button class="choice-btn ${state.direction === "dev" ? "active" : ""}" data-direction="dev">
+              <span>${icon("code", 18)}</span>
+              <span>Разработка ПО</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="field-group" style="margin-bottom:30px">
+          <p class="section-label">3. Формат работы</p>
+          <div class="field-caption">Выберите формат</div>
+          <div class="choice-row">
+            <button class="choice-btn small ${state.format === "internship" ? "active" : ""}" data-format="internship">
+              <span>${icon("stack", 18)}</span>
+              <span>Стажировка</span>
+            </button>
+            <button class="choice-btn small ${state.format === "job" ? "active" : ""}" data-format="job">
+              <span>${icon("calendarBag", 18)}</span>
+              <span>Работа</span>
+            </button>
+          </div>
+        </div>
+
+        <button class="primary-btn" data-screen="resume">Продолжить</button>
+      `;
+    }
+
+    function resumeView() {
+      return `
+        <div class="card-header">
+          <div class="card-icon">${icon("file", 30)}</div>
+          <div>
+            <div class="card-title-row">
+              <h2 class="card-title">Резюме</h2>
+              <span class="status-badge">В работе</span>
+            </div>
+            <div class="muted-copy">Загрузите резюме или создайте его<br>с карьерным консультантом</div>
+          </div>
+        </div>
+
+        <div class="resume-grid">
+          <div class="resume-option">
+            <div class="resume-option-top">
+              <div class="mini-icon">${icon("upload", 26)}</div>
+              <div>
+                <div class="option-title">Загрузить резюме</div>
+                <div class="option-copy">PDF, DOCX или TXT, до 10 МБ</div>
+              </div>
+            </div>
+            <div>
+              <button class="outline-btn" data-toast="Резюме загружено и отправлено на проверку">Загрузить</button>
+            </div>
+          </div>
+
+          <div class="or-label">или</div>
+
+          <div class="resume-option">
+            <div class="resume-option-top">
+              <div class="mini-icon">${icon("consult", 26)}</div>
+              <div>
+                <div class="option-title">Создать с консультантом</div>
+                <div class="option-copy">Выберите удобное время<br>для консультации</div>
+              </div>
+            </div>
+            <div>
+              <button class="outline-btn" data-screen="assessment">Выбрать время</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="info-strip">
+          <span class="info-circle">i</span>
+          <span>После сохранения резюме оно будет отправлено на проверку. Обычно это занимает до 24 часов.</span>
+        </div>
+      `;
+    }
+
+    function assessmentView() {
+      const days = [
+        { day: "Вт", num: "23", active: true },
+        { day: "Ср", num: "24" },
+        { day: "Чт", num: "25" },
+        { day: "Пт", num: "26" },
+        { day: "Сб", num: "27" },
+        { day: "Вс", num: "28" },
+        { day: "Пн", num: "29" }
+      ];
+
+      const times = ["10:00", "11:30", "14:00", "15:30", "17:00"];
+
+      const materials = [
+        { title: "Алгоритмы и структуры данных", desc: "Базовые алгоритмы, сложность", iconName: "code" },
+        { title: "SQL: базовые запросы", desc: "SELECT, JOIN, GROUP BY", iconName: "stack" },
+        { title: "Python: основы", desc: "Функции, коллекции, ООП", iconName: "code" },
+        { title: "Примеры задач", desc: "Разбор типовых задач", iconName: "file" }
+      ];
+
+      return `
+        <div class="card-header" style="margin-bottom:16px">
+          <div class="card-icon">${icon("assessment", 28)}</div>
+          <div>
+            <div class="card-title-row">
+              <h2 class="card-title">Assessment</h2>
+              <span class="status-badge">В работе</span>
+            </div>
+            <div class="muted-copy">Проверьте свои hard-skills и получите обратную связь</div>
+          </div>
+        </div>
+
+        <div class="assessment-grid">
+          <div class="assessment-left">
+            <p class="section-label">Выберите время для проверки</p>
+
+            <div class="calendar-toolbar">
+              <div class="calendar-nav">
+                <button class="icon-btn">‹</button>
+                <div style="font-size:15px;font-weight:500;color:#464e61">23 — 29 апреля</div>
+                <button class="icon-btn">›</button>
+              </div>
+              <div class="timezone">GMT+3 ▾</div>
+            </div>
+
+            <div class="day-grid">
+              ${days.map((item) => `
+                <button class="day-card ${state.assessmentDay === item.num ? "active" : ""}" data-day="${item.num}">
+                  <div class="day-name">${item.day}</div>
+                  <div class="day-num">${item.num}</div>
+                  ${state.assessmentDay === item.num ? '<div class="day-dot"></div>' : ""}
+                </button>
+              `).join("")}
+            </div>
+
+            <div class="time-grid">
+              ${times.map((time) => `
+                <button class="time-btn ${state.assessmentTime === time ? "active" : ""}" data-time="${time}">${time}</button>
+              `).join("")}
+            </div>
+
+            <div class="duration">
+              <span>${icon("clock", 16)}</span>
+              <span>Длительность: 60 минут</span>
+            </div>
+
+            <button class="primary-btn wide" data-action="book-assessment">Забронировать</button>
+          </div>
+
+          <div class="materials-panel">
+            <h3 class="materials-heading">Материалы для подготовки</h3>
+            ${materials.map((item) => `
+              <button class="material-card" data-toast="Открыт материал: ${item.title}">
+                <span class="mini-icon" style="width:46px;height:46px;border-radius:12px">${icon(item.iconName, 22)}</span>
+                <span class="material-copy">
+                  <span class="material-title">${item.title}</span>
+                  <span class="material-desc">${item.desc}</span>
+                </span>
+                <span class="chevron">›</span>
+              </button>
+            `).join("")}
+            <button class="material-card materials-link" data-toast="Открыт список всех материалов">
+              <span class="material-copy">
+                <span class="material-title">Смотреть все материалы</span>
+              </span>
+              <span class="chevron">›</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="info-strip" style="margin-top:22px">
+          <span class="info-circle">i</span>
+          <span>После прохождения вы получите обратную связь и рекомендации.</span>
+        </div>
+      `;
+    }
+
+    function logoContent(job) {
+      if (job.icon === "bolt") {
+        return '<span style="font-size:28px;color:#ffd94a">⚡</span>';
+      }
+      if (job.icon === "datasphere") {
+        return '<span style="font-size:10px;letter-spacing:.04em;color:#3b4356;font-weight:700">DATASPHERE</span>';
+      }
+      if (job.icon === "p") {
+        return '<span style="font-size:36px;font-weight:700;color:white">p</span>';
+      }
+      return icon("code", 28);
+    }
+
+    function vacanciesView() {
+      return `
+        <h2 class="jobs-heading">Подходящие вакансии</h2>
+
+        <div class="jobs-list">
+          ${jobs.map((job) => `
+            <div class="job-card">
+              <div class="job-logo ${job.logoClass}">${logoContent(job)}</div>
+
+              <div>
+                <div class="job-role">
+                  <span>${job.role}</span>
+                  ${job.isNew ? '<span class="new-pill">New</span>' : ""}
+                </div>
+                <div class="job-company">${job.company}</div>
+                <div class="job-meta">${job.meta}</div>
+              </div>
+
+              <div class="job-desc">${job.desc}</div>
+
+              <div class="job-action">
+                <button class="outline-btn" data-toast="Отклик отправлен: ${job.role}">Откликнуться</button>
+                <div class="posted">${job.posted}</div>
+              </div>
+            </div>
+          `).join("")}
+        </div>
+      `;
     }
 
     function renderScreen() {
-      const screen = screens[state.screen];
-      image.src = screen.src;
-      image.alt = screen.title;
+      renderSideNav();
+      renderProgress();
 
-      hotspotsRoot.innerHTML = screen.hotspots.map((spot, index) => `
-        <button
-          class="hotspot"
-          data-index="${index}"
-          style="
-            left:${(spot.x / frameWidth) * 100}%;
-            top:${(spot.y / frameHeight) * 100}%;
-            width:${(spot.w / frameWidth) * 100}%;
-            height:${(spot.h / frameHeight) * 100}%;
-          "
-          aria-label="${spot.go ? `Перейти: ${screens[spot.go].title}` : "Действие на экране"}"
-        ></button>
-      `).join("");
+      const views = {
+        request: requestView,
+        resume: resumeView,
+        assessment: assessmentView,
+        vacancies: vacanciesView
+      };
 
-      renderToolbar();
+      screenCard.innerHTML = views[state.screen]();
     }
 
-    toolbar.addEventListener("click", (event) => {
-      const button = event.target.closest("[data-screen]");
-      if (!button) return;
-      state.screen = button.dataset.screen;
-      renderScreen();
-    });
-
-    hotspotsRoot.addEventListener("click", (event) => {
-      const button = event.target.closest("[data-index]");
-      if (!button) return;
-
-      const screen = screens[state.screen];
-      const spot = screen.hotspots[Number(button.dataset.index)];
-      if (!spot) return;
-
-      if (spot.toast) {
-        showToast(spot.toast);
+    document.addEventListener("click", (event) => {
+      const screenButton = event.target.closest("[data-screen]");
+      if (screenButton) {
+        state.screen = screenButton.dataset.screen;
+        renderScreen();
+        return;
       }
 
-      if (spot.go) {
-        state.screen = spot.go;
+      const directionButton = event.target.closest("[data-direction]");
+      if (directionButton) {
+        state.direction = directionButton.dataset.direction;
+        renderScreen();
+        return;
+      }
+
+      const formatButton = event.target.closest("[data-format]");
+      if (formatButton) {
+        state.format = formatButton.dataset.format;
+        renderScreen();
+        return;
+      }
+
+      const dayButton = event.target.closest("[data-day]");
+      if (dayButton) {
+        state.assessmentDay = dayButton.dataset.day;
+        renderScreen();
+        return;
+      }
+
+      const timeButton = event.target.closest("[data-time]");
+      if (timeButton) {
+        state.assessmentTime = timeButton.dataset.time;
+        renderScreen();
+        return;
+      }
+
+      const toastButton = event.target.closest("[data-toast]");
+      if (toastButton) {
+        showToast(toastButton.dataset.toast);
+        return;
+      }
+
+      const actionButton = event.target.closest("[data-action]");
+      if (!actionButton) return;
+
+      if (actionButton.dataset.action === "book-assessment") {
+        showToast(`Assessment забронирован: ${state.assessmentDay} апреля, ${state.assessmentTime}`);
+        state.screen = "vacancies";
         renderScreen();
       }
     });
 
     document.addEventListener("keydown", (event) => {
-      const currentIndex = order.indexOf(state.screen);
-      if (event.key === "ArrowRight" && currentIndex < order.length - 1) {
-        state.screen = order[currentIndex + 1];
+      const order = ["request", "resume", "assessment", "vacancies"];
+      const current = order.indexOf(state.screen);
+      if (event.key === "ArrowRight" && current < order.length - 1) {
+        state.screen = order[current + 1];
         renderScreen();
       }
-      if (event.key === "ArrowLeft" && currentIndex > 0) {
-        state.screen = order[currentIndex - 1];
+      if (event.key === "ArrowLeft" && current > 0) {
+        state.screen = order[current - 1];
         renderScreen();
       }
     });
